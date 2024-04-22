@@ -37,26 +37,14 @@ public class NewServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-	    EntityManager em = DBUtil.createEntityManager();
-	    em.getTransaction().begin();
-	    
-	    Message m = new Message();
-	    
-	    String title = "taro";
-	    m.setTitle(title);
-	    
-	    String content = "hello";
-	    m.setContent(content);
-	    
-	    Timestamp currentTime = new Timestamp(System.currentTimeMillis()); // 現在の日時を取得
-	    m.setCreated_at(currentTime);
-	    m.setUpdated_at(currentTime);
-	    
-	    em.persist(m);
-	    em.getTransaction().commit();
-	    
-	    
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+	    request.setAttribute("_token", request.getSession().getId());
+
+        // おまじないとしてのインスタンスを生成
+        request.setAttribute("message", new Message());
+
+        var rd = request.getRequestDispatcher("/WEB-INF/views/messages/new.jsp");
+        rd.forward(request, response);
+
+    }
 
 }
